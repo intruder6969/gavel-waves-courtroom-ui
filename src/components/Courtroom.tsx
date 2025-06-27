@@ -72,61 +72,91 @@ const Courtroom: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-6 lg:p-8">
+    <div className="min-h-screen bg-gray-50 p-4 md:p-6 lg:p-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-2">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Virtual Courtroom
           </h1>
-          <p className="text-gray-600 text-sm md:text-base">
-            {state.sessionStarted ? 'Session in Progress' : 'Awaiting Statements'}
+          <p className="text-lg text-gray-600">
+            {state.sessionStarted 
+              ? 'Session in progress' 
+              : 'Both parties must submit their opening statements before proceeding'
+            }
           </p>
         </div>
 
         {!state.sessionStarted ? (
           /* Pre-Session: Statement Submission */
-          <div className="space-y-8">
-            {/* Avatars Preview */}
-            <div className="flex flex-col items-center space-y-6">
-              {/* Judge */}
-              <div className="flex justify-center">
-                <Avatar 
-                  name="Judge Smith" 
-                  role="judge" 
-                  isSpeaking={false}
-                />
-              </div>
-              
-              {/* Lawyers */}
-              <div className="flex justify-center space-x-8 md:space-x-16 lg:space-x-24">
-                <Avatar 
-                  name="Attorney Johnson" 
-                  role="plaintiff" 
-                  isSpeaking={false}
-                />
-                <Avatar 
-                  name="Attorney Williams" 
-                  role="defense" 
-                  isSpeaking={false}
-                />
+          <div className="space-y-12">
+            {/* Judge Card */}
+            <div className="flex justify-center">
+              <div className="bg-orange-50 rounded-2xl p-8 shadow-sm border border-orange-100">
+                <div className="flex flex-col items-center">
+                  <div className="relative mb-4">
+                    <div className="w-24 h-24 bg-gray-300 rounded-full flex items-center justify-center">
+                      <span className="text-2xl font-bold text-gray-600">J</span>
+                    </div>
+                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
+                      <div className="w-2 h-2 bg-white rounded-full"></div>
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-1">Judge Williams</h3>
+                  <p className="text-orange-600 font-medium">Presiding Judge</p>
+                </div>
               </div>
             </div>
 
-            {/* Statement Submissions */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <TextSubmission
-                side="plaintiff"
-                onSubmit={handlePlaintiffSubmission}
-                isSubmitted={state.plaintiffSubmission.isSubmitted}
-                submittedText={state.plaintiffSubmission.text}
-              />
-              <TextSubmission
-                side="defense"
-                onSubmit={handleDefenseSubmission}
-                isSubmitted={state.defenseSubmission.isSubmitted}
-                submittedText={state.defenseSubmission.text}
-              />
+            {/* Attorneys Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Plaintiff Attorney */}
+              <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200">
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-gray-300 rounded-full mr-4 flex items-center justify-center">
+                    <span className="text-lg font-bold text-gray-600">S</span>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">Sarah Chen</h3>
+                    <p className="text-gray-600">Plaintiff Attorney</p>
+                  </div>
+                  <div className="ml-auto">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-orange-100 text-orange-800">
+                      Pending
+                    </span>
+                  </div>
+                </div>
+                <TextSubmission
+                  side="plaintiff"
+                  onSubmit={handlePlaintiffSubmission}
+                  isSubmitted={state.plaintiffSubmission.isSubmitted}
+                  submittedText={state.plaintiffSubmission.text}
+                />
+              </div>
+
+              {/* Defense Attorney */}
+              <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200">
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-gray-300 rounded-full mr-4 flex items-center justify-center">
+                    <span className="text-lg font-bold text-gray-600">M</span>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">Michael Torres</h3>
+                    <p className="text-gray-600">Defense Attorney</p>
+                  </div>
+                  <div className="ml-auto">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-orange-100 text-orange-800">
+                      Pending
+                    </span>
+                  </div>
+                </div>
+                <TextSubmission
+                  side="defense"
+                  onSubmit={handleDefenseSubmission}
+                  isSubmitted={state.defenseSubmission.isSubmitted}
+                  submittedText={state.defenseSubmission.text}
+                />
+              </div>
             </div>
 
             {/* Start Button */}
@@ -139,9 +169,9 @@ const Courtroom: React.FC = () => {
                         onClick={handleStartSession}
                         disabled={!canStartSession}
                         size="lg"
-                        className="px-8 py-3 text-lg font-semibold"
+                        className="px-12 py-4 text-lg font-semibold bg-gray-600 hover:bg-gray-700 disabled:bg-gray-400"
                       >
-                        Start Court Session
+                        ▶ Start Court Session
                       </Button>
                     </div>
                   </TooltipTrigger>
@@ -156,30 +186,43 @@ const Courtroom: React.FC = () => {
           </div>
         ) : (
           /* Active Session */
-          <div className="space-y-8">
-            {/* Active Courtroom Layout */}
-            <div className="flex flex-col items-center space-y-8">
-              {/* Judge */}
-              <div className="flex justify-center">
+          <div className="space-y-12">
+            {/* Judge Card - Active Session */}
+            <div className="flex justify-center">
+              <div className="bg-orange-50 rounded-2xl p-8 shadow-sm border border-orange-100">
                 <Avatar 
-                  name="Judge Smith" 
+                  name="Judge Williams" 
                   role="judge" 
                   isSpeaking={state.speakingStates.judge}
                 />
+                <div className="text-center mt-4">
+                  <p className="text-orange-600 font-medium">Presiding Judge</p>
+                </div>
               </div>
-              
-              {/* Lawyers */}
-              <div className="flex justify-center space-x-12 md:space-x-20 lg:space-x-32">
+            </div>
+
+            {/* Attorneys - Active Session */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200 text-center">
                 <Avatar 
-                  name="Attorney Johnson" 
+                  name="Sarah Chen" 
                   role="plaintiff" 
                   isSpeaking={state.speakingStates.plaintiff}
                 />
+                <div className="mt-4">
+                  <p className="text-gray-600">Plaintiff Attorney</p>
+                </div>
+              </div>
+              
+              <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200 text-center">
                 <Avatar 
-                  name="Attorney Williams" 
+                  name="Michael Torres" 
                   role="defense" 
                   isSpeaking={state.speakingStates.defense}
                 />
+                <div className="mt-4">
+                  <p className="text-gray-600">Defense Attorney</p>
+                </div>
               </div>
             </div>
 
@@ -208,14 +251,6 @@ const Courtroom: React.FC = () => {
                 >
                   Toggle Defense Speaking
                 </Button>
-              </div>
-            </div>
-
-            {/* Session Status */}
-            <div className="text-center">
-              <div className="inline-flex items-center space-x-2 px-4 py-2 bg-green-100 text-green-800 rounded-full">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-sm font-medium">Live Session</span>
               </div>
             </div>
           </div>
