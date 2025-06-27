@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Volume2 } from 'lucide-react';
 import Avatar from './Avatar';
 import TextSubmission from './TextSubmission';
 
@@ -81,7 +82,10 @@ const Courtroom: React.FC = () => {
           </h1>
           <p className="text-lg text-gray-600">
             {state.sessionStarted 
-              ? 'Session in progress' 
+              ? (state.speakingStates.judge ? 'Judge Williams is speaking' :
+                 state.speakingStates.plaintiff ? 'Sarah Chen is speaking' :
+                 state.speakingStates.defense ? 'Michael Torres is speaking' :
+                 'Session in progress')
               : 'Both parties must submit their opening statements before proceeding'
             }
           </p>
@@ -189,39 +193,100 @@ const Courtroom: React.FC = () => {
           <div className="space-y-12">
             {/* Judge Card - Active Session */}
             <div className="flex justify-center">
-              <div className="bg-orange-50 rounded-2xl p-8 shadow-sm border border-orange-100">
-                <Avatar 
-                  name="Judge Williams" 
-                  role="judge" 
-                  isSpeaking={state.speakingStates.judge}
-                />
-                <div className="text-center mt-4">
-                  <p className="text-orange-600 font-medium">Presiding Judge</p>
+              <div className={`
+                bg-white rounded-2xl p-8 shadow-sm transition-all duration-300
+                ${state.speakingStates.judge 
+                  ? 'border-2 border-blue-400 shadow-lg' 
+                  : 'border border-gray-200'
+                }
+              `}>
+                <div className="flex flex-col items-center">
+                  <div className="relative mb-4">
+                    <div className="w-24 h-24 bg-gray-300 rounded-full flex items-center justify-center">
+                      <span className="text-2xl font-bold text-gray-600">J</span>
+                    </div>
+                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
+                      <div className="w-2 h-2 bg-white rounded-full"></div>
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-1">Judge Williams</h3>
+                  <p className="text-orange-600 font-medium mb-3">Presiding Judge</p>
+                  
+                  {state.speakingStates.judge && (
+                    <div className="flex items-center space-x-2 bg-blue-50 px-3 py-2 rounded-full">
+                      <Volume2 className="w-4 h-4 text-blue-600" />
+                      <span className="text-sm text-blue-600 font-medium">Speaking</span>
+                      <div className="flex space-x-1">
+                        <div className="w-1 h-3 bg-blue-600 rounded-full animate-pulse"></div>
+                        <div className="w-1 h-4 bg-blue-600 rounded-full animate-pulse" style={{animationDelay: '0.1s'}}></div>
+                        <div className="w-1 h-2 bg-blue-600 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
+                        <div className="w-1 h-4 bg-blue-600 rounded-full animate-pulse" style={{animationDelay: '0.3s'}}></div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
 
             {/* Attorneys - Active Session */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200 text-center">
-                <Avatar 
-                  name="Sarah Chen" 
-                  role="plaintiff" 
-                  isSpeaking={state.speakingStates.plaintiff}
-                />
-                <div className="mt-4">
-                  <p className="text-gray-600">Plaintiff Attorney</p>
+              {/* Plaintiff */}
+              <div className={`
+                bg-white rounded-2xl p-8 shadow-sm text-center transition-all duration-300
+                ${state.speakingStates.plaintiff 
+                  ? 'border-2 border-blue-400 shadow-lg' 
+                  : 'border border-gray-200'
+                }
+              `}>
+                <div className="flex flex-col items-center">
+                  <div className="w-20 h-20 bg-gray-300 rounded-full mb-4 flex items-center justify-center">
+                    <span className="text-xl font-bold text-gray-600">S</span>
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-1">Sarah Chen</h3>
+                  <p className="text-gray-600 mb-3">Plaintiff Attorney</p>
+                  
+                  {state.speakingStates.plaintiff && (
+                    <div className="flex items-center space-x-2 bg-blue-50 px-3 py-2 rounded-full">
+                      <Volume2 className="w-4 h-4 text-blue-600" />
+                      <span className="text-sm text-blue-600 font-medium">Speaking</span>
+                      <div className="flex space-x-1">
+                        <div className="w-1 h-3 bg-blue-600 rounded-full animate-pulse"></div>
+                        <div className="w-1 h-4 bg-blue-600 rounded-full animate-pulse" style={{animationDelay: '0.1s'}}></div>
+                        <div className="w-1 h-2 bg-blue-600 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
+                        <div className="w-1 h-4 bg-blue-600 rounded-full animate-pulse" style={{animationDelay: '0.3s'}}></div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
               
-              <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200 text-center">
-                <Avatar 
-                  name="Michael Torres" 
-                  role="defense" 
-                  isSpeaking={state.speakingStates.defense}
-                />
-                <div className="mt-4">
-                  <p className="text-gray-600">Defense Attorney</p>
+              {/* Defense */}
+              <div className={`
+                bg-white rounded-2xl p-8 shadow-sm text-center transition-all duration-300
+                ${state.speakingStates.defense 
+                  ? 'border-2 border-blue-400 shadow-lg' 
+                  : 'border border-gray-200'
+                }
+              `}>
+                <div className="flex flex-col items-center">
+                  <div className="w-20 h-20 bg-gray-300 rounded-full mb-4 flex items-center justify-center">
+                    <span className="text-xl font-bold text-gray-600">M</span>
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-1">Michael Torres</h3>
+                  <p className="text-gray-600 mb-3">Defense Attorney</p>
+                  
+                  {state.speakingStates.defense && (
+                    <div className="flex items-center space-x-2 bg-blue-50 px-3 py-2 rounded-full">
+                      <Volume2 className="w-4 h-4 text-blue-600" />
+                      <span className="text-sm text-blue-600 font-medium">Speaking</span>
+                      <div className="flex space-x-1">
+                        <div className="w-1 h-3 bg-blue-600 rounded-full animate-pulse"></div>
+                        <div className="w-1 h-4 bg-blue-600 rounded-full animate-pulse" style={{animationDelay: '0.1s'}}></div>
+                        <div className="w-1 h-2 bg-blue-600 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
+                        <div className="w-1 h-4 bg-blue-600 rounded-full animate-pulse" style={{animationDelay: '0.3s'}}></div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -235,21 +300,21 @@ const Courtroom: React.FC = () => {
                   variant="outline"
                   onClick={() => toggleSpeaking('judge')}
                 >
-                  Toggle Judge Speaking
+                  Judge Speaks
                 </Button>
                 <Button 
                   size="sm" 
                   variant="outline"
                   onClick={() => toggleSpeaking('plaintiff')}
                 >
-                  Toggle Plaintiff Speaking
+                  Plaintiff Speaks
                 </Button>
                 <Button 
                   size="sm" 
                   variant="outline"
                   onClick={() => toggleSpeaking('defense')}
                 >
-                  Toggle Defense Speaking
+                  Defense Speaks
                 </Button>
               </div>
             </div>
